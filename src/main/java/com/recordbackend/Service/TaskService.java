@@ -1,15 +1,12 @@
 package com.recordbackend.Service;
 
 import com.recordbackend.Dto.TaskDto;
-import com.recordbackend.Model.Boardlist;
 import com.recordbackend.Model.Task;
 import com.recordbackend.Model.User;
 import com.recordbackend.Repository.BoardListRepository;
 import com.recordbackend.Repository.TaskRepository;
-import com.recordbackend.Repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,15 +16,8 @@ import java.util.List;
 public class TaskService {
 
     private final TaskRepository taskRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final BoardListRepository boardListRepository;
-
-    @Autowired
-    public TaskService(TaskRepository taskRepository, UserRepository userRepository, BoardListRepository boardListRepository){
-        this.taskRepository = taskRepository;
-        this.userRepository = userRepository;
-        this.boardListRepository = boardListRepository;
-    }
 
     public List<Task> getAllTask(){
         return this.taskRepository.findAll();
@@ -75,7 +65,7 @@ public class TaskService {
                 .expirationDate(taskDto.getExpirationDate())
                 .status(taskDto.getStatus())
                 .boardlist(this.boardListRepository.findById(taskDto.getBoardlistId()).orElseThrow(() -> new EntityNotFoundException("BoardList not found")))
-                .users(taskDto.getListUserId().stream().map(userService::findById).toList())
+                .users(taskDto.getListUserId().stream().map(itemId -> userService.convertToEntity(userService.getUserById(itemId))).toList())
                 .build();
     }
 

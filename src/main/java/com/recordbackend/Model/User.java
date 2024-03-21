@@ -38,6 +38,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<SecurityToken> securityTokens;
 
+    @OneToMany(mappedBy = "user")
+    private List<User_project> user_projects;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -73,4 +76,13 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return false;
     }
+
+    public List<Long> getTaskIds() {
+        return tasks.stream().map(Task::getId).toList();
+    }
+
+    public List<Long> getProjectIds() {
+        return user_projects.stream().map(User_project::getProject).map(Project::getId).toList();
+    }
+
 }

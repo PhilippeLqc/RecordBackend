@@ -12,10 +12,11 @@ import lombok.*;
 @Getter
 @Setter
 public class UserRegisterDto{
-    String username;
+    private String username;
 
     @NotNull
-    String password;
+    private String password;
+
     @Email
-    String email;
+    private String email;
 }

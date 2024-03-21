@@ -31,7 +31,7 @@ public class TaskService {
         return this.convertToTaskDto(this.taskRepository.save(this.convertToTaskEntity(taskDto)));
     }
 
-    public TaskDto updateTask(TaskDto taskDto, Long id){
+    public TaskDto updateTask(Long id, TaskDto taskDto){
         Task taskToUpdate = this.convertToTaskEntity(taskDto);
         taskToUpdate.setId(id);
         return this.convertToTaskDto(taskToUpdate);

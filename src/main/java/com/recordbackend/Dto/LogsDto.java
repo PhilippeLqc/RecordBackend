@@ -11,7 +11,7 @@ import lombok.*;
 @Setter
 public class LogsDto {
     @Email
-    String email;
+    private String email;
     @NotNull
-    String password;
+    private String password;
 }

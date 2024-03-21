@@ -9,7 +9,6 @@ import lombok.*;
 @Setter
 public class BoardlistDto {
 
-    private Long id;
     private String name;
     private Long projectId;
 }

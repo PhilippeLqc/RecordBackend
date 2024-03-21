@@ -38,7 +38,7 @@ public class TaskService {
     }
 
     public TaskDto createTask(TaskDto taskDto){
-
+        return this.convertToTaskDto(this.taskRepository.save(this.convertToTaskEntity(taskDto)));
     }
 
 
@@ -52,7 +52,7 @@ public class TaskService {
                 .expirationDate(task.getExpirationDate())
                 .status(task.getStatus())
                 .listUserId(task.getUsers().stream().map(User::getId).toList())
-                .boardlistId(this.boardListRepository.findById(task.getBoardlist().getId()).orElseThrow(() -> new EntityNotFoundException("BoardList not found")))
+                .boardlistId(this.boardListRepository.findById(task.getBoardlist().getId()).get().getId())
                 .build();
     }
 

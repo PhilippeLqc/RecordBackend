@@ -10,9 +10,9 @@ import java.util.List;
 @Getter
 @Setter
 public class UserDto{
-    String username;
-    String email;
-    Role role;
-    List<Long> taskIds;
-    List<Long> projectIds;
+    private String username;
+    private String email;
+    private Role role;
+    private List<Long> taskIds;
+    private List<Long> projectIds;
 }

@@ -10,7 +10,7 @@ import lombok.*;
 @Getter
 @Setter
 public class UserRegisterDto{
-    String username;
-    String password;
-    String email;
+    private String username;
+    private String password;
+    private String email;
 }

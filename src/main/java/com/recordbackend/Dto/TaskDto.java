@@ -4,6 +4,7 @@ import com.recordbackend.Model.Status;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,4 +16,6 @@ public class TaskDto {
     private String description;
     private LocalDateTime expirationDate;
     private Status status;
+    private List<Long> listUserId;
+    private Long boardlistId;
 }

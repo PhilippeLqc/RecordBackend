@@ -22,8 +22,11 @@ public class User implements UserDetails {
     private String username;
     private String password;
     private String email;
+    private boolean isEnable = false;
+
     @Enumerated(EnumType.STRING)
     private Role role;
+
     @ManyToMany
     @JoinTable(
             name = "user_task",
@@ -31,7 +34,11 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "task_id")
     )
     private List<Task> tasks;
-    private boolean isEnable = false;
+
+    @OneToMany(mappedBy = "user")
+    private List<SecurityToken> securityTokens;
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

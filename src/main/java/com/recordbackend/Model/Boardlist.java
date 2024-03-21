@@ -1,9 +1,6 @@
 package com.recordbackend.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -12,8 +9,14 @@ import lombok.*;
 @Builder
 @Getter
 @Setter
-public class Token {
+public class Boardlist {
+
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
+    private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
 }

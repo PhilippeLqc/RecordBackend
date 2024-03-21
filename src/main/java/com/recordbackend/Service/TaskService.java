@@ -47,7 +47,9 @@ public class TaskService {
         return this.convertToTaskDto(taskToUpdate);
     }
 
-
+    public void deleteTask(Long id){
+        this.taskRepository.deleteById(id);
+    }
 
 
     // Convert to TaskDto

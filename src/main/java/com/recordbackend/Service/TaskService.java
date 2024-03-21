@@ -19,8 +19,8 @@ public class TaskService {
     private final UserService userService;
     private final BoardListRepository boardListRepository;
 
-    public List<Task> getAllTask(){
-        return this.taskRepository.findAll();
+    public List<TaskDto> getAllTask(){
+        return this.taskRepository.findAll().stream().map(this::convertToTaskDto).toList();
     }
 
     public TaskDto getTaskById(Long id){

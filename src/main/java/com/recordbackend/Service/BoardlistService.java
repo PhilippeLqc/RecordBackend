@@ -7,6 +7,8 @@ import com.recordbackend.Repository.ProjectRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class BoardlistService {
@@ -14,7 +16,9 @@ public class BoardlistService {
     private final BoardListRepository boardListRepository;
     private final ProjectRepository projectRepository;
 
+    public List<BoardlistDto> getAllBoardlist() {
 
+    }
 
 
 

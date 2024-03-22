@@ -20,7 +20,7 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public UserDto saveUser(UserRegisterDto userRegisterDto){
+    public UserDto saveUser(@Valid @RequestBody UserRegisterDto userRegisterDto){
         return userService.createUser(userRegisterDto);
     }
 

@@ -18,7 +18,7 @@ public class ProjectController {
 
     // create project
     @PostMapping("/create")
-    public Project createProject(Project project){
+    public Project createProject(@RequestBody Project project){
         return projectService.createProject(project);
     }
 
@@ -55,12 +55,12 @@ public class ProjectController {
     // get all projects by status & by user id
     @GetMapping("/{status}/{userId}")
     public List<Project> getAllProjectsByStatusAndUserId(@PathVariable String status, @PathVariable Long userId){
-        return projectService.getAllProjectsByStatusAndUserId(Status.valueOf(status), userId);
+        return projectService.getAllProjectsByStatusAndUserId(Status.valueOf(status));
     }
 
     // get all projects by user id
     @GetMapping("/{userId}")
     public List<Project> getAllProjectsByUserId(@PathVariable Long userId){
-        return projectService.getAllProjectsByUserId(userId);
+        return projectService.getAllProjectsByUserId();
     }
 }

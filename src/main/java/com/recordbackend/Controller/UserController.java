@@ -2,6 +2,7 @@ package com.recordbackend.Controller;
 
 import com.recordbackend.Dto.UserDto;
 import com.recordbackend.Service.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +35,7 @@ public class UserController {
 
     // Update user by id
     @PutMapping("/{id}")
-    public UserDto updateUser(@PathVariable Long id, @RequestBody UserDto userDto){
+    public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDto){
         return userService.updateUserById(id, userDto);
     }
     // delete user by id

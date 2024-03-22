@@ -49,32 +49,32 @@ public class User implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return email;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return isEnable;
     }
 
     public List<Long> getTaskIds() {
@@ -84,5 +84,4 @@ public class User implements UserDetails {
     public List<Long> getProjectIds() {
         return user_projects.stream().map(User_project::getProject).map(Project::getId).toList();
     }
-
 }

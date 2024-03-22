@@ -1,20 +1,17 @@
 package com.recordbackend.Service;
 
 import com.recordbackend.Dto.AuthResponseDto;
+import com.recordbackend.Dto.LogsDto;
 import com.recordbackend.Dto.UserDto;
 import com.recordbackend.Dto.UserRegisterDto;
-import com.recordbackend.Dto.LogsDto;
-import com.recordbackend.Model.Project;
-import com.recordbackend.Model.User;
-import com.recordbackend.Model.User_project;
-import com.recordbackend.Repository.TaskRepository;
+import com.recordbackend.Model.*;
 import com.recordbackend.Repository.UserRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,16 +19,19 @@ import java.util.HashMap;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
-    private final ProjectService projectService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final SecurityTokenService securityTokenService;
 
+    @Setter
+    private ProjectService projectService;
+    @Setter
+    private TaskService taskService;
 
     // convert UserRegisterDto to User
     public User convertToEntity(UserRegisterDto userRegisterDto) {
@@ -43,15 +43,24 @@ public class UserService {
     }
 
     // convert UserDto to User
-    public User convertToEntity(UserDto userDto) { //TODO add taskIds and projectIds by fetching from TaskService and ProjectService
-        List<Project> project = userDto.getProjectIds().stream().map(projectService::findById).toList();
-        // List<Task> task = userDto.getTaskIds().stream().map(taskService::findById).toList();
+    public User convertToEntity(UserDto userDto) {
+        // get all projects by projectIds in userDto and map to User_project. Return as list of User_project
+        List<Project> project = userDto.getProjectIds()
+                .stream()
+                .map(projectService::findById)
+                .toList();
+        // get all tasks by taskIds in userDto and map to Task. Return as list of Task
+        List<Task> task = userDto.getTaskIds()
+                .stream()
+                .map(taskService::getTaskById)
+                .toList();
+        //build User with username, email, role, tasks and user_projects
         return User.builder()
                 .username(userDto.getUsername())
                 .email(userDto.getEmail())
                 .role(userDto.getRole())
-                //.tasks(task)
-                .user_projects(project.stream().map(p -> User_project.builder().project(p).build()).toList())
+                .tasks(task)
+                .user_projects(project.stream().map(p -> User_project.builder().project(p).build()).toList()) // map project to User_project and return as list of User_project
                 .build();
     }
 
@@ -60,7 +69,7 @@ public class UserService {
         return UserDto.builder()
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .role(user.getRole())
+                .role(Role.USER)
                 .taskIds(user.getTaskIds())
                 .projectIds(user.getProjectIds())
                 .build();

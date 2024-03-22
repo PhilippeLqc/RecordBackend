@@ -3,6 +3,7 @@ package com.recordbackend.Model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,5 +22,8 @@ public class Project {
     private Status status;
 
     @OneToMany(mappedBy = "project")
-    private List<User_project> user_projects;
+    private List<User_project> user_projects = new ArrayList<>();
+
+    @OneToMany(mappedBy = "project")
+    private List<Boardlist> boardlists= new ArrayList<>();
 }

@@ -2,6 +2,7 @@ package com.recordbackend.Controller;
 
 import com.recordbackend.Dto.UserDto;
 import com.recordbackend.Service.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    // get user by id
+    // get userDto by id
     @GetMapping("/{id}")
     public UserDto getUserDtoById(@PathVariable Long id){
         return userService.getUserDtoById(id);

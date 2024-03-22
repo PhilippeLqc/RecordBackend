@@ -8,17 +8,21 @@ import com.recordbackend.Repository.BoardListRepository;
 import com.recordbackend.Repository.ProjectRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class BoardlistService {
 
     private final BoardListRepository boardListRepository;
     private final ProjectRepository projectRepository;
-    private final ProjectService projectService;
+
+    @Setter
+    private ProjectService projectService;
 
 
     // Convert Boardlist to BoardlistDto

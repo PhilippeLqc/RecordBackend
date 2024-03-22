@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,6 +30,6 @@ public class Task {
     private Boardlist boardlist;
 
     @ManyToMany(mappedBy = "tasks")
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
 
 }

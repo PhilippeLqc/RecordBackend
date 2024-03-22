@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.web.oauth2.client.OAuth2ClientSecurityMarker;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,6 +34,8 @@ public class TaskService {
             task = new Task();
         }
 
+        List<User> listUsers = new ArrayList<>();
+        taskDto.getListUserId().stream().map(itemId -> listUsers.add(userService.getUserById(itemId))).toList();
         return Task.builder()
                 .id(task.getId())
                 .title(taskDto.getTitle())
@@ -40,7 +43,6 @@ public class TaskService {
                 .expirationDate(taskDto.getExpirationDate())
                 .status(taskDto.getStatus())
                 .boardlist(this.boardListRepository.findById(taskDto.getBoardlistId()).orElseThrow(() -> new EntityNotFoundException("BoardList not found")))
-                .users(taskDto.getListUserId().stream().map(itemId -> userService.getUserById(itemId)).toList())
                 .build();
     }
 

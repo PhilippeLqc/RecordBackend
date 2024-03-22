@@ -102,16 +102,12 @@ public class ProjectService {
         // initialize user defining by jwt
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         // see if user is admin
-        if (user.getRole().equals(Role.ADMIN)) {
-            // if user is admin return all projects
-            return projectRepository.findAll();
-        } else {
-            // if user is not admin return only the projects of the user by using user
-            return userService.getUserById(user.getId())
-                    .getUser_projects()
-                    .stream()
-                    .map(User_project::getProject)
-                    .toList();
-        }
+        // if user is not admin return only the projects of the user by using user
+        return userService.getUserById(user.getId())
+                .getUser_projects()
+                .stream()
+                .map(User_project::getProject)
+                .toList();
+
     }
 }

@@ -71,7 +71,7 @@ public class BoardlistService {
     }
 
     // delete boardlist by id
-    public void deleteTask(Long id){
+    public void deleteBoardlist(Long id){
         this.boardListRepository.deleteById(id);
     }
 }

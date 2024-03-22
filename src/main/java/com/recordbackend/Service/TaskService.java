@@ -9,6 +9,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.config.annotation.web.oauth2.client.OAuth2ClientSecurityMarker;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,11 +23,15 @@ public class TaskService {
     private final BoardListRepository boardListRepository;
 
     @Setter
+    @Autowired
     private UserService userService;
 
     // convert TaskDto to Task
     public Task convertToTaskEntity(TaskDto taskDto){
         Task task = this.taskRepository.findTaskByTitle(taskDto.getTitle());
+        if(task == null){
+            task = new Task();
+        }
 
         return Task.builder()
                 .id(task.getId())
@@ -52,7 +58,7 @@ public class TaskService {
 
     //------------------------------------------------------------------------------------------------------------
     //
-    // create a new user
+    // create a new task
     public TaskDto createTask(TaskDto taskDto){
         return this.convertToTaskDto(this.taskRepository.save(this.convertToTaskEntity(taskDto)));
     }

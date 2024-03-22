@@ -28,6 +28,11 @@ public class TaskController {
         return ResponseEntity.ok(tasks);
     }
 
+    @GetMapping("/user/{id}")
+    public List<TaskDto> getTaskDtoByUserId(@PathVariable("id") Long id) {
+        return this.taskService.getTaskDtoByUserId(id);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<TaskDto> createTask(@RequestBody TaskDto task){
         TaskDto newTask = taskService.createTask(task);

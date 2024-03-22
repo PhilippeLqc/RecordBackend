@@ -39,6 +39,7 @@ public class UserService {
                 .username(userRegisterDto.getUsername())
                 .email(userRegisterDto.getEmail())
                 .password(userRegisterDto.getPassword())
+                .role(Role.USER)
                 .build();
     }
 
@@ -80,7 +81,6 @@ public class UserService {
         User user = userRepository.findByEmailAndPassword(logsDto.getEmail(), logsDto.getPassword());
         return convertToDto(user);
     }
-
 
     //------------------------------------------------------------------------------------------------------------
     //

@@ -17,7 +17,7 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
     private String title;
-    private String description;
+    private String description; // TODO : change to photo
     @Enumerated(EnumType.STRING)
     private Status status;
 

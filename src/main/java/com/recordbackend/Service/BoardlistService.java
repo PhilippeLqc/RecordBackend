@@ -16,13 +16,8 @@ public class BoardlistService {
     private final BoardListRepository boardListRepository;
     private final ProjectRepository projectRepository;
 
-    public List<BoardlistDto> getAllBoardlist() {
 
-    }
-
-
-
-    // Convert to BoardlistDto
+    // Convert Boardlist to BoardlistDto
     public BoardlistDto convertToBoardlistDto(Boardlist boardlist){
         return BoardlistDto.builder()
                 .name(boardlist.getName())
@@ -30,7 +25,7 @@ public class BoardlistService {
                 .build();
     }
 
-    // Convert to Boardlist Entity
+    // Convert BoardlistDto to Boardlist Entity
     public Boardlist convertToBoardlistEntity(BoardlistDto boardlistDto){
         Boardlist boardlist = this.boardListRepository.findBoardlistByName(boardlistDto.getName());
 
@@ -40,5 +35,15 @@ public class BoardlistService {
                 .project(this.projectRepository.findById(boardlistDto.getProjectId()).get())
                 .build();
     }
+
+    public List<BoardlistDto> getAllBoardlist() {
+
+    }
+
+
+
+
+
+
 
 }

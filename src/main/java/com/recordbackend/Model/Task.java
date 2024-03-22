@@ -30,6 +30,10 @@ public class Task {
     private Boardlist boardlist;
 
     @ManyToMany(mappedBy = "tasks")
-    private List<User> users = new ArrayList<>();
+    private List<User> users;
+
+    public Task(String title){
+        this.title = title;
+    }
 
 }

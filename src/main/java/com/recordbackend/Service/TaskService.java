@@ -35,15 +35,25 @@ public class TaskService {
         }
 
         List<User> listUsers = new ArrayList<>();
-        taskDto.getListUserId().stream().map(itemId -> listUsers.add(userService.getUserById(itemId))).toList();
-        return Task.builder()
+
+        Task newTask = Task.builder()
                 .id(task.getId())
                 .title(taskDto.getTitle())
                 .description(taskDto.getDescription())
                 .expirationDate(taskDto.getExpirationDate())
                 .status(taskDto.getStatus())
+                .users(new ArrayList<>())
                 .boardlist(this.boardListRepository.findById(taskDto.getBoardlistId()).orElseThrow(() -> new EntityNotFoundException("BoardList not found")))
                 .build();
+
+        taskDto.getListUserId().forEach(userId -> listUsers.add(userService.getUserById(userId)));
+//        System.out.println(listUsers.forEach(user ->););
+        newTask.setUsers(listUsers);
+//        listUsers.forEach(user -> System.out.println(user.getId()));
+
+        newTask.getUsers().forEach(user -> System.out.println(user.getId()));
+
+        return newTask;
     }
 
     // convert Task to TaskDto
@@ -62,6 +72,8 @@ public class TaskService {
     //
     // create a new task
     public TaskDto createTask(TaskDto taskDto){
+        Task newTask = new Task(taskDto.getTitle());
+        this.taskRepository.save(newTask);
         return this.convertToTaskDto(this.taskRepository.save(this.convertToTaskEntity(taskDto)));
     }
 

@@ -5,6 +5,7 @@ import com.recordbackend.Dto.UserDto;
 import com.recordbackend.Dto.UserRegisterDto;
 import com.recordbackend.Dto.LogsDto;
 import com.recordbackend.Model.Project;
+import com.recordbackend.Model.Task;
 import com.recordbackend.Model.User;
 import com.recordbackend.Model.User_project;
 import com.recordbackend.Repository.TaskRepository;
@@ -27,6 +28,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final ProjectService projectService;
+    private final TaskService taskService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
@@ -50,10 +52,10 @@ public class UserService {
                 .map(projectService::findById)
                 .toList();
         // get all tasks by taskIds in userDto and map to Task. Return as list of Task
-        // List<Task> task = userDto.getTaskIds()
-        // .stream()
-        // .map(taskService::findById)
-        // .toList();
+        List<Task> task = userDto.getTaskIds()
+                .stream()
+                .map(taskService::getTaskById)
+                .toList();
         //build User with username, email, role, tasks and user_projects
         return User.builder()
                 .username(userDto.getUsername())

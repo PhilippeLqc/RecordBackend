@@ -1,11 +1,10 @@
 package com.recordbackend.Service;
 
-import com.recordbackend.Model.Project;
-import com.recordbackend.Model.Status;
-import com.recordbackend.Model.User_project;
+import com.recordbackend.Model.*;
 import com.recordbackend.Repository.ProjectRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,7 +25,18 @@ public class ProjectService {
 
     // save a project
     public Project createProject(Project project) {
-        return projectRepository.save(project);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Project projectSave = projectRepository.save(project);
+        // save user to User_project
+        User_project user_project = User_project.builder()
+                .user(user)
+                .project(projectSave)
+                .role(Role.ADMIN)
+                .build();
+        // add user_project to project
+        projectSave.getUser_projects().add(user_project);
+        // save project
+        return projectRepository.save(projectSave);
     }
 
     // get all projects

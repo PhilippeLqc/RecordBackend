@@ -65,7 +65,7 @@ public class TaskService {
                 .expirationDate(taskDto.getExpirationDate())
                 .status(taskDto.getStatus())
                 .boardlist(this.boardListRepository.findById(taskDto.getBoardlistId()).orElseThrow(() -> new EntityNotFoundException("BoardList not found")))
-                .users(taskDto.getListUserId().stream().map(itemId -> userService.convertToEntity(userService.getUserById(itemId))).toList())
+                .users(taskDto.getListUserId().stream().map(itemId -> userService.convertToEntity(userService.getUserDtoById(itemId))).toList())
                 .build();
     }
 

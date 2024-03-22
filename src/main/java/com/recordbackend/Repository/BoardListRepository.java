@@ -11,6 +11,6 @@ public interface BoardListRepository extends JpaRepository<Boardlist, Long> {
     @Query(value = "SELECT * FROM boardlist b WHERE b.name = ?1", nativeQuery = true)
     Boardlist findBoardlistByName(String name);
 
-    @Query("SELECT * FROM boardlist b WHERE b.project_id = ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM boardlist b WHERE b.project_id = ?1", nativeQuery = true)
     List<Boardlist> findBoardlistByProjectId(Long project_id);
 }

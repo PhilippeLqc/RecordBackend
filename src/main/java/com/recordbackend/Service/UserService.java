@@ -34,15 +34,24 @@ public class UserService {
     }
 
     // convert UserDto to User
-    public User convertToEntity(UserDto userDto) { //TODO add taskIds and projectIds by fetching from TaskService and ProjectService
-        List<Project> project = userDto.getProjectIds().stream().map(projectService::findById).toList();
-        // List<Task> task = userDto.getTaskIds().stream().map(taskService::findById).toList();
+    public User convertToEntity(UserDto userDto) { //TODO add taskIds by fetching from TaskService
+        // get all projects by projectIds in userDto and map to User_project. Return as list of User_project
+        List<Project> project = userDto.getProjectIds()
+                .stream()
+                .map(projectService::findById)
+                .toList();
+        // get all tasks by taskIds in userDto and map to Task. Return as list of Task
+        // List<Task> task = userDto.getTaskIds()
+        // .stream()
+        // .map(taskService::findById)
+        // .toList();
+        //build User with username, email, role, tasks and user_projects
         return User.builder()
                 .username(userDto.getUsername())
                 .email(userDto.getEmail())
                 .role(userDto.getRole())
                 //.tasks(task)
-                .user_projects(project.stream().map(p -> User_project.builder().project(p).build()).toList())
+                .user_projects(project.stream().map(p -> User_project.builder().project(p).build()).toList()) // map project to User_project and return as list of User_project
                 .build();
     }
 

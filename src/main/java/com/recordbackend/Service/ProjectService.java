@@ -20,7 +20,8 @@ public class ProjectService {
 
     // find by ID a list of projects
     public Project findById(Long id) {
-        return projectRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Project not found"));
+        return projectRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Project not found"));
     }
 
     // save a project
@@ -40,6 +41,7 @@ public class ProjectService {
 
     // update a project
     public Project updateProject(Long id, Project project) {
+        // find project by id and update project title, description and status and save it if needed.
         Project projectToUpdate = findById(id);
         projectToUpdate.setTitle(project.getTitle());
         projectToUpdate.setDescription(project.getDescription());
@@ -52,8 +54,9 @@ public class ProjectService {
         return projectRepository.findAllByStatus(status);
     }
 
-    // get all projects by status by userDto
+    // get all projects by status by user
     public List<Project> getAllProjectsByStatusAndUserId(Status status, Long userId) {
+        // get user by id and map user to project and return as list of projects by user id and status
         return userService.getUserById(userId)
                 .getUser_projects()
                 .stream()
@@ -62,8 +65,9 @@ public class ProjectService {
                 .toList();
     }
 
-    // get all projects by userDto
+    // get all projects by user
     public List<Project> getAllProjectsByUserId(Long userId) {
+        // get user by id and map user to project and return as list of projects by user id
         return userService.getUserById(userId)
                 .getUser_projects()
                 .stream()

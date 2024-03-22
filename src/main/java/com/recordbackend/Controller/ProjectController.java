@@ -52,7 +52,7 @@ public class ProjectController {
         return projectService.getAllProjectsByStatus(Status.valueOf(status));
     }
 
-    // get all projects by status by user id
+    // get all projects by status & by user id
     @GetMapping("/{status}/{userId}")
     public List<Project> getAllProjectsByStatusAndUserId(@PathVariable String status, @PathVariable Long userId){
         return projectService.getAllProjectsByStatusAndUserId(Status.valueOf(status), userId);

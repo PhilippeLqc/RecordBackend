@@ -28,18 +28,18 @@ public class UserController {
     }
 
     // get user by email
-    @GetMapping("/{email}")
+    @GetMapping("/email/{email}")
     public UserDto getUserByEmail(@PathVariable String email){
         return userService.getUserByEmail(email);
     }
 
     // Update user by id
-    @PutMapping("/{id}")
-    public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDto){
+    @PutMapping("/update/{id}")
+    public UserDto updateUser(@PathVariable Long id, @RequestBody UserDto userDto){
         return userService.updateUserById(id, userDto);
     }
     // delete user by id
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteUser(@PathVariable Long id){
         userService.deleteUserById(id);
     }

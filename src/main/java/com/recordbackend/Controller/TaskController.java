@@ -22,25 +22,30 @@ public class TaskController {
         return ResponseEntity.ok(task);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<TaskDto>> getAllTasks() {
         List<TaskDto> tasks = taskService.getAllTask();
         return ResponseEntity.ok(tasks);
     }
 
-    @PostMapping
+    @GetMapping("/user/{id}")
+    public List<TaskDto> getTaskDtoByUserId(@PathVariable("id") Long id) {
+        return this.taskService.getTaskDtoByUserId(id);
+    }
+
+    @PostMapping("/create")
     public ResponseEntity<TaskDto> createTask(@RequestBody TaskDto task){
         TaskDto newTask = taskService.createTask(task);
         return ResponseEntity.status(HttpStatus.CREATED).body(newTask);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<TaskDto> updateTask(@PathVariable Long id, @RequestBody TaskDto task) {
         TaskDto updatedTask = taskService.updateTask(id, task);
         return ResponseEntity.ok(updatedTask);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);
         return ResponseEntity.noContent().build();

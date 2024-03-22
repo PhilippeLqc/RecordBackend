@@ -35,13 +35,13 @@ public class ProjectController {
     }
 
     // update project by id
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public Project updateProject(@PathVariable Long id, @RequestBody Project project){
         return projectService.updateProject(id, project);
     }
 
     // delete project by id
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteProject(@PathVariable Long id){
         projectService.deleteProject(id);
     }
@@ -52,14 +52,14 @@ public class ProjectController {
         return projectService.getAllProjectsByStatus(Status.valueOf(status));
     }
 
-    // get all projects by status & by user id
-    @GetMapping("/{status}/{userId}")
+    // get all projects by status by user id
+    @GetMapping("/{status}/user/{userId}")
     public List<Project> getAllProjectsByStatusAndUserId(@PathVariable String status, @PathVariable Long userId){
         return projectService.getAllProjectsByStatusAndUserId(Status.valueOf(status));
     }
 
     // get all projects by user id
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     public List<Project> getAllProjectsByUserId(@PathVariable Long userId){
         return projectService.getAllProjectsByUserId();
     }

@@ -21,10 +21,6 @@ public class BoardlistService {
     private final BoardListRepository boardListRepository;
     private final ProjectRepository projectRepository;
 
-    @Setter
-    private ProjectService projectService;
-
-
     // Convert Boardlist to BoardlistDto
     public BoardlistDto convertToBoardlistDto(Boardlist boardlist){
         return BoardlistDto.builder()
@@ -77,7 +73,7 @@ public class BoardlistService {
     public BoardlistDto updateBoardlistById(Long id, BoardlistDto boardlistDto) {
         Boardlist boardlist = boardListRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Boardlist not found"));
         boardlist.setName(boardlistDto.getName());
-        boardlist.setProject(this.projectService.findById(boardlistDto.getProjectId()));
+        boardlist.setProject(this.projectRepository.findById(boardlistDto.getProjectId()).get());
         return convertToBoardlistDto(boardListRepository.save(boardlist));
     }
 

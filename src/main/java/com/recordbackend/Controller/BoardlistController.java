@@ -32,6 +32,12 @@ public class BoardlistController {
         return boardlistService.getBoardlistDtoById(id);
     }
 
+    // get boardlist by id
+    @GetMapping("/project/{id}")
+    public List<BoardlistDto> getBoardlistDtoByProjectId(@PathVariable Long id){
+        return boardlistService.getBoardlistByProjectId(id);
+    }
+
     // Update boardlist by id
     @PutMapping("/{id}")
     public BoardlistDto updateBoardlist(@PathVariable Long id, @RequestBody BoardlistDto boardlistDto){

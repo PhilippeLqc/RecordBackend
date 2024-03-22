@@ -17,10 +17,11 @@ public class SecurityToken {
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
     private String token;
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Reason reason;
     private LocalDateTime createdAt;
     private LocalDateTime expiredAt;
+    private boolean isDisabled = false;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

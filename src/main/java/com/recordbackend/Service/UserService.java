@@ -1,5 +1,6 @@
 package com.recordbackend.Service;
 
+import com.recordbackend.Dto.AuthResponseDto;
 import com.recordbackend.Dto.UserDto;
 import com.recordbackend.Dto.UserRegisterDto;
 import com.recordbackend.Dto.LogsDto;
@@ -11,9 +12,13 @@ import com.recordbackend.Repository.UserRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -21,9 +26,12 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final TaskRepository taskRepository;
     private final ProjectService projectService;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+    private final SecurityTokenService securityTokenService;
+
 
     // convert UserRegisterDto to User
     public User convertToEntity(UserRegisterDto userRegisterDto) {
@@ -86,8 +94,12 @@ public class UserService {
     }
 
     // get user by id
-    public UserDto getUserById(Long id) {
-        return convertToDto(userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found")));
+    public UserDto getUserDtoById(Long id) {
+        return convertToDto(getUserById(id));
+    }
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
     // update user by id
@@ -107,5 +119,27 @@ public class UserService {
     // get user by email
     public UserDto getUserByEmail(String email) {
         return convertToDto(userRepository.findByEmail(email));
+    }
+
+    // login user & generate tokens
+    public AuthResponseDto login(LogsDto logsDto) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        logsDto.getEmail(),
+                        logsDto.getPassword())
+        );
+
+        User user = userRepository.findByEmail(logsDto.getEmail());
+        securityTokenService.deleteTokenByUser(user);
+
+        String jwt = jwtService.generateToken(user);
+        String refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
+
+        securityTokenService.saveJwtAndRefreshToken(jwt, refreshToken, user);
+
+        return AuthResponseDto.builder()
+                .token(jwt)
+                .refreshToken(refreshToken)
+                .build();
     }
 }

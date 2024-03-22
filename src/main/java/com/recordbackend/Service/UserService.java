@@ -26,7 +26,6 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final TaskRepository taskRepository;
     private final ProjectService projectService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -95,8 +94,12 @@ public class UserService {
     }
 
     // get user by id
-    public UserDto getUserById(Long id) {
-        return convertToDto(userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found")));
+    public UserDto getUserDtoById(Long id) {
+        return convertToDto(getUserById(id));
+    }
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
     // update user by id

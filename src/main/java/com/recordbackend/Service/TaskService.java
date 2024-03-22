@@ -19,42 +19,7 @@ public class TaskService {
     private final UserService userService;
     private final BoardListRepository boardListRepository;
 
-    public List<TaskDto> getAllTask(){
-        return this.taskRepository.findAll().stream().map(this::convertToTaskDto).toList();
-    }
-
-    public TaskDto getTaskById(Long id){
-        return this.convertToTaskDto(taskRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Task not found")));
-    }
-
-    public TaskDto createTask(TaskDto taskDto){
-        return this.convertToTaskDto(this.taskRepository.save(this.convertToTaskEntity(taskDto)));
-    }
-
-    public TaskDto updateTask(Long id, TaskDto taskDto){
-        Task taskToUpdate = this.convertToTaskEntity(taskDto);
-        taskToUpdate.setId(id);
-        return this.convertToTaskDto(taskToUpdate);
-    }
-
-    public void deleteTask(Long id){
-        this.taskRepository.deleteById(id);
-    }
-
-
-    // Convert to TaskDto
-    public TaskDto convertToTaskDto(Task task){
-        return TaskDto.builder()
-                .title(task.getTitle())
-                .description(task.getDescription())
-                .expirationDate(task.getExpirationDate())
-                .status(task.getStatus())
-                .listUserId(task.getUsers().stream().map(User::getId).toList())
-                .boardlistId(this.boardListRepository.findById(task.getBoardlist().getId()).get().getId())
-                .build();
-    }
-
-    // Convert to Task Entity
+    // convert TaskDto to Task
     public Task convertToTaskEntity(TaskDto taskDto){
         Task task = this.taskRepository.findTaskByTitle(taskDto.getTitle());
 
@@ -69,6 +34,51 @@ public class TaskService {
                 .build();
     }
 
-    //List<Task> task = userDto.getTaskIds().stream().map(taskService::findById).toList();
+    // convert Task to TaskDto
+    public TaskDto convertToTaskDto(Task task){
+        return TaskDto.builder()
+                .title(task.getTitle())
+                .description(task.getDescription())
+                .expirationDate(task.getExpirationDate())
+                .status(task.getStatus())
+                .listUserId(task.getUsers().stream().map(User::getId).toList())
+                .boardlistId(this.boardListRepository.findById(task.getBoardlist().getId()).get().getId())
+                .build();
+    }
 
+    //------------------------------------------------------------------------------------------------------------
+    //
+    // create a new user
+    public TaskDto createTask(TaskDto taskDto){
+        return this.convertToTaskDto(this.taskRepository.save(this.convertToTaskEntity(taskDto)));
+    }
+
+    // get all TaskDto
+    public List<TaskDto> getAllTask(){
+        return this.taskRepository.findAll().stream().map(this::convertToTaskDto).toList();
+    }
+
+
+    // get Task by id
+    public Task getTaskById(Long id){
+        return this.taskRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Task not found"));
+    }
+
+    // get TaskDto by id
+    public TaskDto getTaskDtoById(Long id){
+        return this.convertToTaskDto(taskRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Task not found")));
+    }
+
+
+    // update Task by id
+    public TaskDto updateTask(Long id, TaskDto taskDto){
+        Task taskToUpdate = this.convertToTaskEntity(taskDto);
+        taskToUpdate.setId(id);
+        return this.convertToTaskDto(taskToUpdate);
+    }
+
+    // delete Task by id
+    public void deleteTask(Long id){
+        this.taskRepository.deleteById(id);
+    }
 }

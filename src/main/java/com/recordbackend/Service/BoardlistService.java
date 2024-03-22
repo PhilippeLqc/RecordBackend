@@ -62,6 +62,11 @@ public class BoardlistService {
         return this.boardListRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Boardlist not found"));
     }
 
+    // get boardlist by project
+    public List<BoardlistDto> getBoardlistByProjectId(Long id){
+        return this.boardListRepository.findBoardlistByProjectId(id).stream().map(this::convertToBoardlistDto).toList();
+    }
+
     // update boardlist by id
     public BoardlistDto updateBoardlistById(Long id, BoardlistDto boardlistDto) {
         Boardlist boardlist = boardListRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Boardlist not found"));

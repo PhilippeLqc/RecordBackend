@@ -7,17 +7,21 @@ import com.recordbackend.Repository.BoardListRepository;
 import com.recordbackend.Repository.TaskRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TaskService {
 
     private final TaskRepository taskRepository;
-    private final UserService userService;
     private final BoardListRepository boardListRepository;
+
+    @Setter
+    private UserService userService;
 
     // convert TaskDto to Task
     public Task convertToTaskEntity(TaskDto taskDto){
@@ -30,7 +34,7 @@ public class TaskService {
                 .expirationDate(taskDto.getExpirationDate())
                 .status(taskDto.getStatus())
                 .boardlist(this.boardListRepository.findById(taskDto.getBoardlistId()).orElseThrow(() -> new EntityNotFoundException("BoardList not found")))
-                .users(taskDto.getListUserId().stream().map(itemId -> userService.convertToEntity(userService.getUserDtoById(itemId))).toList())
+                .users(taskDto.getListUserId().stream().map(itemId -> userService.getUserById(itemId)).toList())
                 .build();
     }
 
@@ -69,6 +73,10 @@ public class TaskService {
         return this.convertToTaskDto(taskRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Task not found")));
     }
 
+    // get TaskDto by user id
+    public List<TaskDto> getTaskDtoByUserId(Long id){
+        return this.userService.getUserById(id).getTasks().stream().map(this::convertToTaskDto).toList();
+    }
 
     // update Task by id
     public TaskDto updateTask(Long id, TaskDto taskDto){

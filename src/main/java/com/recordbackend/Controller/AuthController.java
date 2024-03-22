@@ -28,4 +28,9 @@ public class AuthController {
     public AuthResponseDto login(@Valid @RequestBody LogsDto logsDto) {
         return userService.login(logsDto);
     }
+
+    @PostMapping("/logout")
+    public void logout() {
+        userService.logout();
+    }
 }

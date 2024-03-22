@@ -36,7 +36,9 @@ public class BoardlistService {
     // Convert BoardlistDto to Boardlist Entity
     public Boardlist convertToBoardlistEntity(BoardlistDto boardlistDto){
         Boardlist boardlist = this.boardListRepository.findBoardlistByName(boardlistDto.getName());
-
+        if(boardlist == null){
+            boardlist = new Boardlist();
+        }
         return Boardlist.builder()
                 .id(boardlist.getId())
                 .name(boardlistDto.getName())

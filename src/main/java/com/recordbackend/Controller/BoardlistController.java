@@ -16,7 +16,7 @@ public class BoardlistController {
 
     // create boardlist
     @PostMapping("/create")
-    public BoardlistDto createProject(BoardlistDto boardlistDto){
+    public BoardlistDto createProject(@RequestBody BoardlistDto boardlistDto){
         return boardlistService.createBoardlist(boardlistDto);
     }
 

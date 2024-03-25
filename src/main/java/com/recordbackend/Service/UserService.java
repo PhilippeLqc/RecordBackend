@@ -6,6 +6,7 @@ import com.recordbackend.Dto.UserDto;
 import com.recordbackend.Dto.UserRegisterDto;
 import com.recordbackend.Model.*;
 import com.recordbackend.Repository.UserRepository;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final SecurityTokenService securityTokenService;
+    private final EmailService emailService;
 
     @Setter
     private ProjectService projectService;
@@ -86,7 +88,7 @@ public class UserService {
     //------------------------------------------------------------------------------------------------------------
     //
     // create a new user
-    public UserDto createUser(UserRegisterDto userRegisterDto) {
+    public void createUser(UserRegisterDto userRegisterDto) throws MessagingException {
         // convert password with BCrypt
         String BcryptPassword = this.passwordEncoder.encode(userRegisterDto.getPassword());
         userRegisterDto.setPassword(BcryptPassword);
@@ -94,8 +96,11 @@ public class UserService {
         if (userRepository.findByEmail(userRegisterDto.getEmail()) != null) {
             throw new EntityExistsException("Email already in use");
         }
-        // save the UserRegister to the database and return an UserDto
-        return convertToDto(userRepository.save(convertToEntity(userRegisterDto)));
+
+        User user = userRepository.save(convertToEntity(userRegisterDto));
+        System.out.println(user.getId());
+
+        emailService.sendEmailVerification(user);
     }
 
     // get all users
@@ -161,5 +166,15 @@ public class UserService {
     public User getAuthUser() {
         User userAuth = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return getUserById(userAuth.getId());
+    }
+
+    public void activateAccount(String token) {
+        SecurityToken securityToken = securityTokenService.getToken(token);
+
+        User user = getUserById(securityToken.getUser().getId());
+
+        user.setEnable(true);
+        userRepository.save(user);
+        securityTokenService.deleteToken(securityToken);
     }
 }

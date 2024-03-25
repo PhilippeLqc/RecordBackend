@@ -5,17 +5,24 @@ import com.recordbackend.Model.SecurityToken;
 import com.recordbackend.Model.User;
 import com.recordbackend.Repository.SecurityTokenRepository;
 import io.jsonwebtoken.Claims;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.time.ZoneId;
+import java.util.Base64;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SecurityTokenService {
     private final SecurityTokenRepository securityTokenRepository;
     private final JwtService jwtService;
+    @Value("${FRONTEND_URL}")
+    private String frontUrl;
+    private static final String EMAIL_VERIFICATION = "/email-verification?token=";
 
     // Method to save the token from the database
     public void saveToken(SecurityToken token) {
@@ -55,5 +62,39 @@ public class SecurityTokenService {
                 .filter(token -> token.getReason() == Reason.JWT || token.getReason() == Reason.REFRESH_TOKEN)
                 .toList();
         securityTokenRepository.deleteAll(tokensToDelete);
+    }
+
+    public String generateVerificationLink(User user) {
+        String token = generateUniqueToken();
+
+        createToken(token, user, Reason.VERIFY_EMAIL);
+        return frontUrl + EMAIL_VERIFICATION + token;
+    }
+
+    private String generateUniqueToken() {
+        byte[] tokenBytes = new byte[32];
+        new SecureRandom().nextBytes(tokenBytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(tokenBytes);
+    }
+
+    private void createToken(String token, User user, Reason reason) {
+        SecurityToken securityToken = SecurityToken.builder()
+                .token(token)
+                .reason(reason)
+                .createdAt(java.time.LocalDateTime.now())
+                .expiredAt(java.time.LocalDateTime.now())
+                .user(user)
+                .build();
+
+        saveToken(securityToken);
+    }
+
+    public void deleteToken(SecurityToken token) {
+        securityTokenRepository.delete(token);
+    }
+
+    public SecurityToken getToken(String token) {
+        return securityTokenRepository.findByToken(token)
+                .orElseThrow(() -> new EntityNotFoundException("Token not found"));
     }
 }

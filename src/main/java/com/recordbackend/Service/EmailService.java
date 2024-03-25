@@ -19,7 +19,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class EmailService {
 
-    private static final String EMAIL_FROM = "noreply@youtubeclone.com";
+    private static final String EMAIL_FROM = "noreply@record.com";
 
     private final JavaMailSender emailSender;
     private final SpringTemplateEngine thymeleafTemplateEngine;

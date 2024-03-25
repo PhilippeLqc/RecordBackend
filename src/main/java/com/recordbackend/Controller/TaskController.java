@@ -1,6 +1,7 @@
 package com.recordbackend.Controller;
 
 import com.recordbackend.Dto.TaskDto;
+import com.recordbackend.Model.Task;
 import com.recordbackend.Service.TaskService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

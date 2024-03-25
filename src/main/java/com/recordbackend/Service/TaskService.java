@@ -5,6 +5,7 @@ import com.recordbackend.Model.Task;
 import com.recordbackend.Model.User;
 import com.recordbackend.Repository.BoardListRepository;
 import com.recordbackend.Repository.TaskRepository;
+import com.recordbackend.Repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -27,21 +28,19 @@ public class TaskService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     // convert TaskDto to Task
     public Task convertToTaskEntity(TaskDto taskDto){
-        Task task = this.taskRepository.findTaskByTitle(taskDto.getTitle());
-        if(task == null){
-            task = new Task();
-        }
+        List<User> listUsers = taskDto.getListUserId().stream().map(userId -> this.userService.getUserById(userId)).toList();
 
-        List<User> listUsers = new ArrayList<>();
-        taskDto.getListUserId().stream().map(itemId -> listUsers.add(userService.getUserById(itemId))).toList();
         return Task.builder()
-                .id(task.getId())
                 .title(taskDto.getTitle())
                 .description(taskDto.getDescription())
                 .expirationDate(taskDto.getExpirationDate())
                 .status(taskDto.getStatus())
+                .users(listUsers)
                 .boardlist(this.boardListRepository.findById(taskDto.getBoardlistId()).orElseThrow(() -> new EntityNotFoundException("BoardList not found")))
                 .build();
     }
@@ -61,8 +60,31 @@ public class TaskService {
     //------------------------------------------------------------------------------------------------------------
     //
     // create a new task
-    public TaskDto createTask(TaskDto taskDto){
-        return this.convertToTaskDto(this.taskRepository.save(this.convertToTaskEntity(taskDto)));
+//    public TaskDto createTask(TaskDto taskDto){
+//        return this.convertToTaskDto(this.taskRepository.save(this.convertToTaskEntity(taskDto)));
+//    }
+
+    public TaskDto createTask(TaskDto taskDto) {
+        // Fetch the User entities by their IDs
+        List<User> users = userRepository.findAllById(taskDto.getListUserId());
+
+        // Create a new Task entity
+        Task task = Task.builder()
+                .title(taskDto.getTitle())
+                .description(taskDto.getDescription())
+                .expirationDate(taskDto.getExpirationDate())
+                .status(taskDto.getStatus())
+                .build();
+
+        task = taskRepository.save(task);
+
+//        users.forEach(user -> task.getUsers().add(user));
+        for(User user : users){
+            task.getUsers().add(user);
+        }
+
+        // Save the Task entity
+        return this.convertToTaskDto(taskRepository.save(task));
     }
 
     // get all TaskDto

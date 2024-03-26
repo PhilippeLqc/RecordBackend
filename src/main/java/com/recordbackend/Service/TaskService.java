@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -99,5 +100,12 @@ public class TaskService {
     // delete Task by id
     public void deleteTask(Long id){
         this.taskRepository.deleteById(id);
+    }
+
+    public TaskDto assignUserToTask(Long userId, Long taskId) {
+        User user = this.userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        Task task = this.taskRepository.findById(taskId).orElseThrow(() -> new EntityNotFoundException("Task not found"));
+        task.getUsers().add(user);
+        return this.convertToTaskDto(this.taskRepository.save(task));
     }
 }

@@ -1,5 +1,6 @@
 package com.recordbackend.Dto;
 
+import com.recordbackend.Model.Hierarchy;
 import com.recordbackend.Model.Status;
 import lombok.*;
 
@@ -18,6 +19,7 @@ public class TaskDto {
     private String description;
     private LocalDateTime expirationDate;
     private Status status;
+    private Hierarchy hierarchy;
     private List<Long> listUserId;
     private Long boardlistId;
 }

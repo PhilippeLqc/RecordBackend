@@ -3,6 +3,7 @@ package com.recordbackend.Model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.awt.event.HierarchyEvent;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,6 +24,9 @@ public class Task {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @Enumerated(EnumType.STRING)
+    private Hierarchy hierarchy;
 
     @ManyToOne
     @JoinColumn(name = "boardlist_id")

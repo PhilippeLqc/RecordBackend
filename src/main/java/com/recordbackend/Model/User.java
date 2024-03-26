@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -74,10 +75,18 @@ public class User implements UserDetails {
     }
 
     public List<Long> getTaskIds() {
-        return tasks.stream().map(Task::getId).toList();
+        if (tasks == null) {
+            return new ArrayList<>();
+        } else {
+            return tasks.stream().map(Task::getId).toList();
+        }
     }
 
     public List<Long> getProjectIds() {
-        return user_projects.stream().map(User_project::getProject).map(Project::getId).toList();
+        if (user_projects == null) {
+            return new ArrayList<>();
+        } else {
+            return user_projects.stream().map(User_project::getProject).map(Project::getId).toList();
+        }
     }
 }

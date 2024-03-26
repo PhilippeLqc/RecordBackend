@@ -16,7 +16,7 @@ public class BoardlistController {
 
     // create boardlist
     @PostMapping("/create")
-    public BoardlistDto createProject(BoardlistDto boardlistDto){
+    public BoardlistDto createProject(@RequestBody BoardlistDto boardlistDto){
         return boardlistService.createBoardlist(boardlistDto);
     }
 
@@ -39,13 +39,13 @@ public class BoardlistController {
     }
 
     // Update boardlist by id
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public BoardlistDto updateBoardlist(@PathVariable Long id, @RequestBody BoardlistDto boardlistDto){
         return boardlistService.updateBoardlistById(id, boardlistDto);
     }
 
     // delete boardlist by id
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteBoardlist(@PathVariable Long id){
         boardlistService.deleteBoardlist(id);
     }

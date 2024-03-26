@@ -78,6 +78,10 @@ public class TaskService {
         return this.convertToTaskDto(taskRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Task not found")));
     }
 
+    // get TaskDto by user id
+    public List<TaskDto> getTaskDtoByUserId(Long id){
+        return this.userService.getUserById(id).getTasks().stream().map(this::convertToTaskDto).toList();
+    }
 
     // update Task by id
     public TaskDto updateTask(Long id, TaskDto taskDto){

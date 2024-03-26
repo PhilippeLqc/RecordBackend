@@ -2,6 +2,7 @@ package com.recordbackend.Controller;
 
 import com.recordbackend.Dto.UserDto;
 import com.recordbackend.Service.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,25 +21,25 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    // get user by id
+    // get userDto by id
     @GetMapping("/{id}")
     public UserDto getUserDtoById(@PathVariable Long id){
         return userService.getUserDtoById(id);
     }
 
     // get user by email
-    @GetMapping("/{email}")
+    @GetMapping("/email/{email}")
     public UserDto getUserByEmail(@PathVariable String email){
         return userService.getUserByEmail(email);
     }
 
     // Update user by id
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public UserDto updateUser(@PathVariable Long id, @RequestBody UserDto userDto){
         return userService.updateUserById(id, userDto);
     }
     // delete user by id
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteUser(@PathVariable Long id){
         userService.deleteUserById(id);
     }

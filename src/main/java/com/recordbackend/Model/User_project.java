@@ -20,4 +20,6 @@ public class User_project {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }

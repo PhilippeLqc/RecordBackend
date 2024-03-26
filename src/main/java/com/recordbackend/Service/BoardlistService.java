@@ -10,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,8 +23,8 @@ public class BoardlistService {
     private final ProjectRepository projectRepository;
 
     @Setter
+    @Autowired
     private ProjectService projectService;
-
 
     // Convert Boardlist to BoardlistDto
     public BoardlistDto convertToBoardlistDto(Boardlist boardlist){
@@ -36,7 +37,9 @@ public class BoardlistService {
     // Convert BoardlistDto to Boardlist Entity
     public Boardlist convertToBoardlistEntity(BoardlistDto boardlistDto){
         Boardlist boardlist = this.boardListRepository.findBoardlistByName(boardlistDto.getName());
-
+        if(boardlist == null){
+            boardlist = new Boardlist();
+        }
         return Boardlist.builder()
                 .id(boardlist.getId())
                 .name(boardlistDto.getName())

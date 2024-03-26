@@ -11,4 +11,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query(value = "SELECT * FROM task t WHERE t.title = ?1", nativeQuery = true)
     Task findTaskByTitle(String title);
 
+    @Query(value = "SELECT * FROM task t WHERE t.title LIKE %?1% OR t.description LIKE %?1%", nativeQuery = true)
+    List<Task> findTasksByTitleOrDescription(String keyword);
 }

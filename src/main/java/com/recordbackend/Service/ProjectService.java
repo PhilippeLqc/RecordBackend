@@ -16,7 +16,9 @@ import java.util.List;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
-    private final UserService userService;
+
+
+    private UserService userService;
 
     // find by ID a list of projects
     public Project findById(Long id) {

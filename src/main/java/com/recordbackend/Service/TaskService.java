@@ -5,6 +5,7 @@ import com.recordbackend.Model.Task;
 import com.recordbackend.Model.User;
 import com.recordbackend.Repository.BoardListRepository;
 import com.recordbackend.Repository.TaskRepository;
+import com.recordbackend.Repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -22,20 +23,24 @@ public class TaskService {
 
     @Setter
     private UserService userService;
+    private final UserRepository userRepository;
 
     // convert TaskDto to Task
     public Task convertToTaskEntity(TaskDto taskDto){
-        Task task = this.taskRepository.findTaskByTitle(taskDto.getTitle());
+//        Task task = this.taskRepository.findTaskByTitle(taskDto.getTitle());
 
-        return Task.builder()
-                .id(task.getId())
+        Task newTask = Task.builder()
+//                .id(task.getId())
                 .title(taskDto.getTitle())
                 .description(taskDto.getDescription())
                 .expirationDate(taskDto.getExpirationDate())
                 .status(taskDto.getStatus())
                 .boardlist(this.boardListRepository.findById(taskDto.getBoardlistId()).orElseThrow(() -> new EntityNotFoundException("BoardList not found")))
-                .users(taskDto.getListUserId().stream().map(itemId -> userService.getUserById(itemId)).toList())
                 .build();
+
+        List<User> listUser = taskDto.getListUserId().stream().map(userId -> userRepository.findById(userId).get()).toList();
+        listUser.forEach(newTask::addUser);
+        return newTask;
     }
 
     // convert Task to TaskDto

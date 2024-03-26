@@ -42,12 +42,12 @@ public class AuthController {
     }
 
     @PutMapping("/activate")
-    public void activateAccount(@RequestBody TokenRequest tokenRequest) {
+    public void activateAccount(@Valid @RequestBody TokenRequest tokenRequest) {
         userService.activateAccount(tokenRequest.getToken());
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<?> refresh(@RequestBody TokenRequest tokenRequest) {
+    public ResponseEntity<?> refresh(@Valid @RequestBody TokenRequest tokenRequest) {
         return ResponseEntity.ok(jwtService.refreshToken(tokenRequest));
     }
 }

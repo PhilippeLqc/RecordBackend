@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 80%;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        img {
+            width: 400px;
+            height: auto;
+            display: block;
+            margin: 0 auto 20px auto;
+        }
+
+        p {
+            color: #333333;
+            margin-bottom: 15px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #007bff;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px;
+            text-align: center;
+            transition: background-color 0.3s;
+            width: 50%;
+            margin: 10px 0;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <img alt="record logo" th:src="|cid:logo|">
+
+    <p>Bonjour,</p>
+    <p>Merci de vous être inscrit à Records !</p>
+    <p>
+        Vous allez pouvoir profiter pleinement de toutes les fonctionnalités de notre application. </p>
+    <p>
+        Pour cela veuillez vérifier votre email en cliquant sur le bouton ci-dessous :
+    </p>
+    <div class="button-container">
+        <a class="button" th:href="${verificationLink}">Vérifier mon email</a>
+    </div>
+
+    <p>
+        <em>Merci,</em> <br/>
+        <em>La team Records</em>
+    </p>
+</div>
+</body>
+</html>

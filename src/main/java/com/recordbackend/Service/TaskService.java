@@ -90,6 +90,10 @@ public class TaskService {
         return this.convertToTaskDto(taskToUpdate);
     }
 
+    public List<TaskDto> retrieveTaskByTitleOrDescription(String keyword){
+        return this.taskRepository.findTasksByTitleOrDescription(keyword).stream().map(this::convertToTaskDto).toList();
+    }
+
     // delete Task by id
     public void deleteTask(Long id){
         this.taskRepository.deleteById(id);

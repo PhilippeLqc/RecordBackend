@@ -33,6 +33,11 @@ public class TaskController {
         return this.taskService.getTaskDtoByUserId(id);
     }
 
+    @GetMapping("/keyword/{keyword}")
+    public List<TaskDto> getTaskByTitleOrDescription(@PathVariable("keyword") String keyword){
+        return this.taskService.retrieveTaskByTitleOrDescription(keyword);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<TaskDto> createTask(@RequestBody TaskDto task){
         TaskDto newTask = taskService.createTask(task);

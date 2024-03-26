@@ -35,6 +35,4 @@ public class Task {
             inverseJoinColumns = @JoinColumn(name = "task_id")
     )
     private List<User> users;
-
-    public void addUser(User user){ this.users.add(user);};
 }

@@ -12,6 +12,8 @@ import java.util.List;
 @Getter
 @Setter
 public class TaskDto {
+
+    private Long taskId;
     private String title;
     private String description;
     private LocalDateTime expirationDate;

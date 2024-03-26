@@ -29,7 +29,7 @@ public class TaskService {
     // convert TaskDto to Task
     public Task convertToTaskEntity(TaskDto taskDto){
         Task task = Task.builder()
-//                .id(task.getId())
+                .id(taskDto.getTaskId())
                 .title(taskDto.getTitle())
                 .description(taskDto.getDescription())
                 .expirationDate(taskDto.getExpirationDate())
@@ -45,6 +45,7 @@ public class TaskService {
     // convert Task to TaskDto
     public TaskDto convertToTaskDto(Task task){
         return TaskDto.builder()
+                .taskId(task.getId())
                 .title(task.getTitle())
                 .description(task.getDescription())
                 .expirationDate(task.getExpirationDate())

@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,20 +28,18 @@ public class TaskService {
 
     // convert TaskDto to Task
     public Task convertToTaskEntity(TaskDto taskDto){
-//        Task task = this.taskRepository.findTaskByTitle(taskDto.getTitle());
-
-        Task newTask = Task.builder()
+        Task task = Task.builder()
 //                .id(task.getId())
                 .title(taskDto.getTitle())
                 .description(taskDto.getDescription())
                 .expirationDate(taskDto.getExpirationDate())
                 .status(taskDto.getStatus())
                 .boardlist(this.boardListRepository.findById(taskDto.getBoardlistId()).orElseThrow(() -> new EntityNotFoundException("BoardList not found")))
+                .users(new ArrayList<>())
                 .build();
 
-        List<User> listUser = taskDto.getListUserId().stream().map(userId -> userRepository.findById(userId).get()).toList();
-        listUser.forEach(newTask::addUser);
-        return newTask;
+        task.getUsers().addAll(taskDto.getListUserId().stream().map(userId -> userRepository.findById(userId).get()).toList());
+        return task;
     }
 
     // convert Task to TaskDto

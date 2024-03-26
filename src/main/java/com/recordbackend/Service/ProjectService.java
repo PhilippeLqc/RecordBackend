@@ -17,7 +17,6 @@ import java.util.List;
 
 
 @Service
-
 @RequiredArgsConstructor
 public class ProjectService {
 
@@ -46,7 +45,6 @@ private ProjectDto convertToDto(Project project) {
             .status(project.getStatus())
             .build();
 }
-
 
     // find by ID a list of projects
     public Project findById(Long id) {

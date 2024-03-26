@@ -28,12 +28,8 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_task",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "task_id")
-    )
+
+    @ManyToMany(mappedBy = "users")
     private List<Task> tasks;
 
     @OneToMany(mappedBy = "user")

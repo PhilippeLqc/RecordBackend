@@ -28,7 +28,11 @@ public class Task {
     @JoinColumn(name = "boardlist_id")
     private Boardlist boardlist;
 
-    @ManyToMany(mappedBy = "tasks")
+    @ManyToMany
+    @JoinTable(
+            name = "user_task",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "task_id")
+    )
     private List<User> users;
-
 }

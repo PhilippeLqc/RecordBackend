@@ -89,7 +89,7 @@ public class TaskService {
     public TaskDto updateTask(Long id, TaskDto taskDto){
         Task taskToUpdate = this.convertToTaskEntity(taskDto);
         taskToUpdate.setId(id);
-        return this.convertToTaskDto(taskToUpdate);
+        return this.convertToTaskDto(this.taskRepository.save(taskToUpdate));
     }
 
     public List<TaskDto> retrieveTaskByTitleOrDescription(String keyword){

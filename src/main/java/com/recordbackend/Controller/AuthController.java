@@ -4,6 +4,7 @@ import com.recordbackend.Dto.AuthResponseDto;
 import com.recordbackend.Dto.LogsDto;
 import com.recordbackend.Dto.TokenRequest;
 import com.recordbackend.Dto.UserRegisterDto;
+import com.recordbackend.Service.JwtService;
 import com.recordbackend.Service.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -18,9 +19,10 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final UserService userService;
+    private final JwtService jwtService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> saveUser(@Valid @RequestBody UserRegisterDto userRegisterDto){
+    public ResponseEntity<String> saveUser(@Valid @RequestBody UserRegisterDto userRegisterDto) {
         try {
             userService.createUser(userRegisterDto);
             return new ResponseEntity<>("Utilisateur enregistré avec succès.", HttpStatus.CREATED);
@@ -40,7 +42,12 @@ public class AuthController {
     }
 
     @PutMapping("/activate")
-    public void activateAccount(@RequestBody TokenRequest tokenRequest) {
+    public void activateAccount(@Valid @RequestBody TokenRequest tokenRequest) {
         userService.activateAccount(tokenRequest.getToken());
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refresh(@Valid @RequestBody TokenRequest tokenRequest) {
+        return ResponseEntity.ok(jwtService.refreshToken(tokenRequest));
     }
 }

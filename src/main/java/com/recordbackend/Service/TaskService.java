@@ -36,6 +36,7 @@ public class TaskService {
                 .status(taskDto.getStatus())
                 .boardlist(this.boardListRepository.findById(taskDto.getBoardlistId()).orElseThrow(() -> new EntityNotFoundException("BoardList not found")))
                 .users(new ArrayList<>())
+                .hierarchy(taskDto.getHierarchy())
                 .build();
 
         task.getUsers().addAll(taskDto.getListUserId().stream().map(userId -> userRepository.findById(userId).get()).toList());
@@ -50,6 +51,7 @@ public class TaskService {
                 .description(task.getDescription())
                 .expirationDate(task.getExpirationDate())
                 .status(task.getStatus())
+                .hierarchy(task.getHierarchy())
                 .listUserId(task.getUsers().stream().map(User::getId).toList())
                 .boardlistId(this.boardListRepository.findById(task.getBoardlist().getId()).get().getId())
                 .build();

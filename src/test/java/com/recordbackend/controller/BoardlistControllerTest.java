@@ -109,6 +109,22 @@ public class BoardlistControllerTest {
                 .andExpect(jsonPath("$[0].projectId", Matchers.is(102)));
     }
 
+    @Test
+    public void testGetBoardlistById() throws Exception {
+        // Arrange
+        Long id = 202L;
+        BoardlistDto boardlistDtotest = new BoardlistDto("testBoardlist1", 102L);
+        when(boardlistService.getBoardlistDtoById(id)).thenReturn(boardlistDtotest);
+
+        // Act & Assert
+        mockMvc.perform(MockMvcRequestBuilders.get("/boardlist/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token)) // Add the Authorization header with the token
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.name", Matchers.is("testBoardlist1")))
+                .andExpect(jsonPath("$.projectId", Matchers.is(102)));
+    }
+
     // Implement this method to extract token from response
     private String extractTokenFromResponse(String response) throws JsonProcessingException {
         Map<String, String> responseMap = objectMapper.readValue(response, new TypeReference<Map<String, String>>(){});

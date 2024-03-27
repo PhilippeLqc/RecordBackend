@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.recordbackend.Dto.BoardlistDto;
 import com.recordbackend.Service.BoardlistService;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -23,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -101,7 +104,9 @@ public class BoardlistControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + token)) // Add the Authorization header with the token
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$", hasSize(20)));
+                .andExpect(jsonPath("$", hasSize(20)))
+                .andExpect(jsonPath("$[0].name", Matchers.is("Test Boardlist 0")))
+                .andExpect(jsonPath("$[0].projectId", Matchers.is(102)));
     }
 
     // Implement this method to extract token from response

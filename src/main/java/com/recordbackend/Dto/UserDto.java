@@ -2,6 +2,7 @@ package com.recordbackend.Dto;
 
 import com.recordbackend.Model.Role;
 import lombok.*;
+
 import java.util.List;
 
 @NoArgsConstructor
@@ -10,6 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 public class UserDto{
+    private Long id;
     private String username;
     private String email;
     private Role role;

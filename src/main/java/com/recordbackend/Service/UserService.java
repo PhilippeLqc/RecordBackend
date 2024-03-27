@@ -1,9 +1,6 @@
 package com.recordbackend.Service;
 
-import com.recordbackend.Dto.AuthResponseDto;
-import com.recordbackend.Dto.LogsDto;
-import com.recordbackend.Dto.UserDto;
-import com.recordbackend.Dto.UserRegisterDto;
+import com.recordbackend.Dto.*;
 import com.recordbackend.Model.*;
 import com.recordbackend.Repository.UserRepository;
 import jakarta.mail.MessagingException;
@@ -30,7 +27,9 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final SecurityTokenService securityTokenService;
-    private final EmailService emailService;
+    @Setter
+    @Autowired
+    private EmailService emailService;
 
     @Setter
     @Autowired
@@ -64,6 +63,7 @@ public class UserService {
                 .toList();
         //build User with username, email, role, tasks and user_projects
         return User.builder()
+                .id(userDto.getId())
                 .username(userDto.getUsername())
                 .email(userDto.getEmail())
                 .role(userDto.getRole())
@@ -75,6 +75,7 @@ public class UserService {
     // convert User to UserDto
     public UserDto convertToDto(User user) {
         return UserDto.builder()
+                .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .role(Role.USER)
@@ -179,6 +180,23 @@ public class UserService {
 
         user.setEnable(true);
         userRepository.save(user);
+        securityTokenService.deleteToken(securityToken);
+    }
+
+    public void updatePassword(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+    }
+
+    public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        if (!resetPasswordRequest.getPassword().equals(resetPasswordRequest.getConfirmPassword())) {
+            throw new IllegalArgumentException("Passwords do not match");
+        }
+
+        SecurityToken securityToken = securityTokenService.getToken(resetPasswordRequest.getToken());
+        User user = securityToken.getUser();
+
+        updatePassword(user, resetPasswordRequest.getPassword());
         securityTokenService.deleteToken(securityToken);
     }
 }

@@ -18,11 +18,15 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -61,7 +65,7 @@ public class BoardlistControllerTest {
         this.token = extractTokenFromResponse(response); // Implement this method to extract token from response
     }
     @Test
-    public void testCreateNewBoardlistWithValidInput() throws Exception {
+    public void testCreateNewBoardlist() throws Exception {
         // Arrange
         BoardlistDto boardlistDto = new BoardlistDto("Test Boardlist", 102L);
         when(boardlistService.createBoardlist(any(BoardlistDto.class))).thenReturn(boardlistDto);
@@ -74,6 +78,30 @@ public class BoardlistControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Test Boardlist"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.projectId").value(102L));
+    }
+
+    @Test
+    public void testGetAllBoardlist() throws Exception {
+        // Arrange
+        List<BoardlistDto> boardlistDtos = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            BoardlistDto boardlistDto = BoardlistDto.builder()
+                    .name("Test Boardlist " + i)
+                    .projectId(102L)
+                    .build();
+            boardlistDtos.add(boardlistDto);
+        }
+
+        when(boardlistService.getAllBoardlist()).thenReturn(boardlistDtos);
+
+        // Act
+
+        // Assert
+        mockMvc.perform(MockMvcRequestBuilders.get("/boardlist/all")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token)) // Add the Authorization header with the token
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$", hasSize(20)));
     }
 
     // Implement this method to extract token from response

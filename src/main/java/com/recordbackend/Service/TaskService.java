@@ -78,7 +78,7 @@ public class TaskService {
 
     // get TaskDto by id
     public TaskDto getTaskDtoById(Long id){
-        return this.convertToTaskDto(taskRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Task not found")));
+        return this.convertToTaskDto(this.getTaskById(id));
     }
 
     // get TaskDto by user id
@@ -105,7 +105,7 @@ public class TaskService {
     // Assign a user to a task
     public ResponseEntity<TaskDto> assignUserToTask(Long userId, Long taskId) {
         User userRetrieved = this.userService.getUserById(userId);
-        Task task = this.taskRepository.findById(taskId).orElseThrow(() -> new EntityNotFoundException("Task not found"));
+        Task task = this.getTaskById(taskId);
         if(task.getUsers().stream().anyMatch(user -> user.getId().equals(userId))){
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -117,7 +117,7 @@ public class TaskService {
     // Remove a user from a task
     public ResponseEntity<TaskDto> removeUserFromTask(Long userId, Long taskId) {
         User userRetrieved = this.userService.getUserById(userId);
-        Task task = this.taskRepository.findById(taskId).orElseThrow(() -> new EntityNotFoundException("Task not found"));
+        Task task = this.getTaskById(taskId);
         if(task.getUsers().stream().noneMatch(user -> user.getId().equals(userId))) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -56,6 +56,12 @@ public class TaskController {
         return ResponseEntity.ok(updatedTask);
     }
 
+    @PutMapping("/remove-user/{id}/from-task/{taskId}")
+    public ResponseEntity<Boolean> removeUserFromTask(@PathVariable Long id, @PathVariable Long taskId) {
+        Boolean updatedTask = taskService.removeUserFromTask(id, taskId);
+        return ResponseEntity.ok(updatedTask);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);

@@ -10,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,8 +25,8 @@ public class TaskService {
     private final BoardListRepository boardListRepository;
 
     @Setter
+    @Autowired
     private UserService userService;
-    private final UserRepository userRepository;
 
     // convert TaskDto to Task
     public Task convertToTaskEntity(TaskDto taskDto){
@@ -40,7 +41,7 @@ public class TaskService {
                 .hierarchy(taskDto.getHierarchy())
                 .build();
 
-        task.getUsers().addAll(taskDto.getListUserId().stream().map(userId -> userRepository.findById(userId).get()).toList());
+        task.getUsers().addAll(taskDto.getListUserId().stream().map(userId -> userService.getUserById(userId)).toList());
         return task;
     }
 
@@ -103,9 +104,25 @@ public class TaskService {
     }
 
     public TaskDto assignUserToTask(Long userId, Long taskId) {
-        User user = this.userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        User userRetrieved = this.userService.getUserById(userId);
         Task task = this.taskRepository.findById(taskId).orElseThrow(() -> new EntityNotFoundException("Task not found"));
-        task.getUsers().add(user);
-        return this.convertToTaskDto(this.taskRepository.save(task));
+        if(task.getUsers().stream().noneMatch(user -> user.getId().equals(userId))){
+            task.getUsers().add(userRetrieved);
+            return this.convertToTaskDto(this.taskRepository.save(task));
+        }
+        return this.convertToTaskDto(task);
+    }
+
+    public Boolean removeUserFromTask(Long userId, Long taskId) {
+        User userRetrieved = this.userService.getUserById(userId);
+        Task task = this.taskRepository.findById(taskId).orElseThrow(() -> new EntityNotFoundException("Task not found"));
+        if(task.getUsers().stream().anyMatch(user -> user.getId().equals(userId))) {
+
+            task.getUsers().remove(userRetrieved); // Remove the User from the Task's user list
+
+            this.taskRepository.save(task); // Save the Task
+            return true;
+        }
+        return false;
     }
 }

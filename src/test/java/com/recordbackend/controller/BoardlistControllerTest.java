@@ -125,6 +125,37 @@ public class BoardlistControllerTest {
                 .andExpect(jsonPath("$.projectId", Matchers.is(102)));
     }
 
+    @Test
+    public void testGetBoardlistByProjectId() throws Exception {
+        // Arrange
+        Long id = 102L;
+        List<BoardlistDto> boardlistDtos = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            BoardlistDto boardlistDto = BoardlistDto.builder()
+                    .name("Test Boardlist " + i)
+                    .projectId(102L)
+                    .build();
+            boardlistDtos.add(boardlistDto);
+        }
+        for (int i = 0; i < 10; i++) {
+            BoardlistDto boardlistDto = BoardlistDto.builder()
+                    .name("Test Boardlist " + i)
+                    .projectId(122L)
+                    .build();
+            boardlistDtos.add(boardlistDto);
+        }
+
+        when(boardlistService.getBoardlistByProjectId(id)).thenReturn(boardlistDtos);
+
+        // Act & Assert
+        mockMvc.perform(MockMvcRequestBuilders.get("/boardlist/project/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token)) // Add the Authorization header with the token
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$", hasSize(20)))
+                .andExpect(jsonPath("$[?(@.projectId == 102)]", hasSize(10)));
+    }
+
     // Implement this method to extract token from response
     private String extractTokenFromResponse(String response) throws JsonProcessingException {
         Map<String, String> responseMap = objectMapper.readValue(response, new TypeReference<Map<String, String>>(){});

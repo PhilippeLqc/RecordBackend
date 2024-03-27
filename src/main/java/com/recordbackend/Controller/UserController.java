@@ -1,5 +1,7 @@
 package com.recordbackend.Controller;
 
+import com.recordbackend.Dto.AuthResponseDto;
+import com.recordbackend.Dto.ChangePasswordRequest;
 import com.recordbackend.Dto.UserDto;
 import com.recordbackend.Service.UserService;
 import jakarta.validation.Valid;
@@ -42,5 +44,11 @@ public class UserController {
     @DeleteMapping("/delete/{id}")
     public void deleteUser(@PathVariable Long id){
         userService.deleteUserById(id);
+    }
+
+    // change password
+    @PutMapping("/password")
+    public AuthResponseDto changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+        return userService.changePassword(changePasswordRequest);
     }
 }

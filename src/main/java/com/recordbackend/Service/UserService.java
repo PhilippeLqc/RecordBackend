@@ -199,4 +199,22 @@ public class UserService {
         updatePassword(user, resetPasswordRequest.getPassword());
         securityTokenService.deleteToken(securityToken);
     }
+
+    public AuthResponseDto changePassword(ChangePasswordRequest changePasswordRequest) {
+        if (!changePasswordRequest.getPassword().equals(changePasswordRequest.getConfirmPassword())) {
+            throw new IllegalArgumentException("Passwords do not match");
+        }
+
+        User user = getAuthUser();
+
+        user.setPassword(passwordEncoder.encode(changePasswordRequest.getPassword()));
+        userRepository.save(user);
+
+        LogsDto logsDto = LogsDto.builder()
+                .email(user.getEmail())
+                .password(changePasswordRequest.getPassword())
+                .build();
+
+        return login(logsDto);
+    }
 }

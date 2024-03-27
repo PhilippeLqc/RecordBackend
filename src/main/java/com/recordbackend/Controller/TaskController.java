@@ -50,6 +50,16 @@ public class TaskController {
         return ResponseEntity.ok(updatedTask);
     }
 
+    @PutMapping("/assign-user/{id}/to-task/{taskId}")
+    public ResponseEntity<TaskDto> assignUserToTask(@PathVariable Long id, @PathVariable Long taskId) {
+        return taskService.assignUserToTask(id, taskId);
+    }
+
+    @PutMapping("/remove-user/{id}/from-task/{taskId}")
+    public ResponseEntity<TaskDto> removeUserFromTask(@PathVariable Long id, @PathVariable Long taskId) {
+        return taskService.removeUserFromTask(id, taskId);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);

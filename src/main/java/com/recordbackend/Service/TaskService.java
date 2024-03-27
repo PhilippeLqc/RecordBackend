@@ -5,9 +5,7 @@ import com.recordbackend.Model.Task;
 import com.recordbackend.Model.User;
 import com.recordbackend.Repository.BoardListRepository;
 import com.recordbackend.Repository.TaskRepository;
-import com.recordbackend.Repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -105,28 +102,7 @@ public class TaskService {
         this.taskRepository.deleteById(id);
     }
 
-//    public TaskDto assignUserToTask(Long userId, Long taskId) {
-//        User userRetrieved = this.userService.getUserById(userId);
-//        Task task = this.taskRepository.findById(taskId).orElseThrow(() -> new EntityNotFoundException("Task not found"));
-//        if(task.getUsers().stream().noneMatch(user -> user.getId().equals(userId))){
-//            task.getUsers().add(userRetrieved);
-//            return this.convertToTaskDto(this.taskRepository.save(task));
-//        }
-//        return this.convertToTaskDto(task);
-//    }
-
-
-//    public ResponseEntity<?> assignUserToTask(Long userId, Long taskId) {
-//        User userRetrieved = this.userService.getUserById(userId);
-//        Task task = this.taskRepository.findById(taskId).orElseThrow(() -> new EntityNotFoundException("Task not found"));
-//        if(task.getUsers().stream().noneMatch(user -> user.getId().equals(userId))){
-//            task.getUsers().add(userRetrieved);
-//            TaskDto taskDto = this.convertToTaskDto(this.taskRepository.save(task));
-//            return new ResponseEntity<>(taskDto, HttpStatus.OK);
-//        }
-//        return new ResponseEntity<>("User is already assigned to the task", HttpStatus.CONFLICT);
-//    }
-
+    // Assign a user to a task
     public ResponseEntity<TaskDto> assignUserToTask(Long userId, Long taskId) {
         User userRetrieved = this.userService.getUserById(userId);
         Task task = this.taskRepository.findById(taskId).orElseThrow(() -> new EntityNotFoundException("Task not found"));
@@ -138,16 +114,15 @@ public class TaskService {
         return new ResponseEntity<>(taskDto, HttpStatus.OK);
     }
 
-    public Boolean removeUserFromTask(Long userId, Long taskId) {
+    // Remove a user from a task
+    public ResponseEntity<TaskDto> removeUserFromTask(Long userId, Long taskId) {
         User userRetrieved = this.userService.getUserById(userId);
         Task task = this.taskRepository.findById(taskId).orElseThrow(() -> new EntityNotFoundException("Task not found"));
-        if(task.getUsers().stream().anyMatch(user -> user.getId().equals(userId))) {
-
-            task.getUsers().remove(userRetrieved); // Remove the User from the Task's user list
-
-            this.taskRepository.save(task); // Save the Task
-            return true;
+        if(task.getUsers().stream().noneMatch(user -> user.getId().equals(userId))) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return false;
+        task.getUsers().remove(userRetrieved);
+        TaskDto taskDto = this.convertToTaskDto(this.taskRepository.save(task));
+        return new ResponseEntity<>(taskDto, HttpStatus.OK);
     }
 }

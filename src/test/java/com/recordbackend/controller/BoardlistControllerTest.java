@@ -34,7 +34,7 @@ public class BoardlistControllerTest {
     @MockBean
     private BoardlistService boardlistService;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private String token;
 
     @Value("${test.email}")

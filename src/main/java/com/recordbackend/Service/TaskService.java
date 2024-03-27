@@ -107,7 +107,7 @@ public class TaskService {
         User userRetrieved = this.userService.getUserById(userId);
         Task task = this.getTaskById(taskId);
         if(task.getUsers().stream().anyMatch(user -> user.getId().equals(userId))){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
         }
         task.getUsers().add(userRetrieved);
         TaskDto taskDto = this.convertToTaskDto(this.taskRepository.save(task));
@@ -119,7 +119,7 @@ public class TaskService {
         User userRetrieved = this.userService.getUserById(userId);
         Task task = this.getTaskById(taskId);
         if(task.getUsers().stream().noneMatch(user -> user.getId().equals(userId))) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
         }
         task.getUsers().remove(userRetrieved);
         TaskDto taskDto = this.convertToTaskDto(this.taskRepository.save(task));

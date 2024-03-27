@@ -3,9 +3,9 @@ package com.recordbackend.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recordbackend.Dto.BoardlistDto;
 import com.recordbackend.Service.BoardlistService;
-import lombok.Value;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -29,11 +29,11 @@ public class BoardlistControllerTest {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    @Value("${test.token}")
+    private String token;
     @Test
     public void testCreateNewBoardlistWithValidInput() throws Exception {
         // Arrange
-        @Value("${test.token}")
-        String token; // Replace with your actual token
         BoardlistDto boardlistDto = new BoardlistDto("Test Boardlist", 102L);
         when(boardlistService.createBoardlist(any(BoardlistDto.class))).thenReturn(boardlistDto);
 

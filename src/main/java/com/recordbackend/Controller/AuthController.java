@@ -1,9 +1,7 @@
 package com.recordbackend.Controller;
 
-import com.recordbackend.Dto.AuthResponseDto;
-import com.recordbackend.Dto.LogsDto;
-import com.recordbackend.Dto.TokenRequest;
-import com.recordbackend.Dto.UserRegisterDto;
+import com.recordbackend.Dto.*;
+import com.recordbackend.Service.EmailService;
 import com.recordbackend.Service.JwtService;
 import com.recordbackend.Service.UserService;
 import jakarta.mail.MessagingException;
@@ -13,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/auth")
 @AllArgsConstructor
@@ -20,6 +20,7 @@ public class AuthController {
 
     private final UserService userService;
     private final JwtService jwtService;
+    private final EmailService emailService;
 
     @PostMapping("/register")
     public ResponseEntity<String> saveUser(@Valid @RequestBody UserRegisterDto userRegisterDto) {
@@ -49,5 +50,21 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(@Valid @RequestBody TokenRequest tokenRequest) {
         return ResponseEntity.ok(jwtService.refreshToken(tokenRequest));
+    }
+
+    @PostMapping("/password-forgot")
+    public ResponseEntity<String> passwordForgot(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        try {
+            emailService.sendPasswordForgotEmail(email);
+            return ResponseEntity.ok("Email send with success");
+        } catch (MessagingException e) {
+            return new ResponseEntity<>("Mail send error.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/reset-password")
+    public void resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+        userService.resetPassword(resetPasswordRequest);
     }
 }

@@ -23,6 +23,8 @@ public class SecurityTokenService {
     @Value("${FRONTEND_URL}")
     private String frontUrl;
     private static final String EMAIL_VERIFICATION = "/email-verification?token=";
+    private static final String RESET_PASSWORD = "reset-password?token=";
+
 
     // Method to save the token from the database
     public void saveToken(SecurityToken token) {
@@ -96,5 +98,17 @@ public class SecurityTokenService {
     public SecurityToken getToken(String token) {
         return securityTokenRepository.findByToken(token)
                 .orElseThrow(() -> new EntityNotFoundException("Token not found"));
+    }
+
+    public String generateResetPasswordLink(User user) {
+        SecurityToken currentToken = securityTokenRepository.findByUserIdAndReason(user.getId(), Reason.RESET_PASSWORD);
+        if (currentToken != null) {
+            deleteToken(currentToken);
+        }
+
+        String token = generateUniqueToken();
+
+        createToken(token, user, Reason.RESET_PASSWORD);
+        return frontUrl + RESET_PASSWORD + token;
     }
 }

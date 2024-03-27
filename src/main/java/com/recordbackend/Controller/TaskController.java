@@ -52,8 +52,7 @@ public class TaskController {
 
     @PutMapping("/assign-user/{id}/to-task/{taskId}")
     public ResponseEntity<TaskDto> assignUserToTask(@PathVariable Long id, @PathVariable Long taskId) {
-        TaskDto updatedTask = taskService.assignUserToTask(id, taskId);
-        return ResponseEntity.ok(updatedTask);
+        return taskService.assignUserToTask(id, taskId);
     }
 
     @PutMapping("/remove-user/{id}/from-task/{taskId}")

@@ -24,6 +24,9 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @Enumerated(EnumType.STRING)
+    private Hierarchy hierarchy;
+
     @ManyToOne
     @JoinColumn(name = "boardlist_id")
     private Boardlist boardlist;

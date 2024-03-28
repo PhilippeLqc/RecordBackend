@@ -114,7 +114,7 @@ public class BoardlistControllerTest {
         // Arrange
         Long id = 202L;
         BoardlistDto boardlistDtotest = new BoardlistDto("testBoardlist1", 102L);
-        when(boardlistService.getBoardlistDtoById(id)).thenReturn(boardlistDtotest);
+        when(boardlistService.getBoardlistDtoById(any(Long.class))).thenReturn(boardlistDtotest);
 
         // Act & Assert
         mockMvc.perform(MockMvcRequestBuilders.get("/boardlist/{id}", id)
@@ -145,7 +145,7 @@ public class BoardlistControllerTest {
             boardlistDtos.add(boardlistDto);
         }
 
-        when(boardlistService.getBoardlistByProjectId(id)).thenReturn(boardlistDtos);
+        when(boardlistService.getBoardlistByProjectId(any(Long.class))).thenReturn(boardlistDtos);
 
         // Act & Assert
         mockMvc.perform(MockMvcRequestBuilders.get("/boardlist/project/{id}", id)
@@ -161,7 +161,7 @@ public class BoardlistControllerTest {
         // Arrange
         Long id = 202L;
         BoardlistDto boardlistDto = new BoardlistDto("testBoardlist1", 102L);
-        when(boardlistService.updateBoardlistById(id, boardlistDto)).thenReturn(boardlistDto);
+        when(boardlistService.updateBoardlistById(any(Long.class), any(BoardlistDto.class))).thenReturn(boardlistDto);
         System.out.println(objectMapper.writeValueAsString(boardlistDto));
         // Act & Assert
         mockMvc.perform(MockMvcRequestBuilders.put("/boardlist/update/{id}", id)

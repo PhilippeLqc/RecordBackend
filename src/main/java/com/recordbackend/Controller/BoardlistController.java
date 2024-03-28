@@ -48,8 +48,7 @@ public class BoardlistController {
     // delete boardlist by id
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Boolean> deleteBoardlist(@PathVariable Long id){
-        boardlistService.deleteBoardlist(id);
-        return ResponseEntity.noContent().build();
+        return boardlistService.deleteBoardlist(id);
     }
 
 }

@@ -3,6 +3,7 @@ package com.recordbackend.Controller;
 import com.recordbackend.Dto.BoardlistDto;
 import com.recordbackend.Service.BoardlistService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,8 +47,8 @@ public class BoardlistController {
 
     // delete boardlist by id
     @DeleteMapping("/delete/{id}")
-    public void deleteBoardlist(@PathVariable Long id){
-        boardlistService.deleteBoardlist(id);
+    public ResponseEntity<Boolean> deleteBoardlist(@PathVariable Long id){
+        return boardlistService.deleteBoardlist(id);
     }
 
 }

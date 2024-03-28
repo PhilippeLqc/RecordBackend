@@ -98,8 +98,13 @@ public class TaskService {
     }
 
     // delete Task by id
-    public void deleteTask(Long id){
+    public ResponseEntity<Boolean> deleteTask(Long id){
+        Task task = this.getTaskById(id);
+        if(task == null){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         this.taskRepository.deleteById(id);
+        return new ResponseEntity<>(true, HttpStatus.valueOf(200));
     }
 
     // Assign a user to a task

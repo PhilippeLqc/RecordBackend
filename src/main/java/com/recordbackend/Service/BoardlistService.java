@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -76,14 +78,16 @@ public class BoardlistService {
 
     // update boardlist by id
     public BoardlistDto updateBoardlistById(Long id, BoardlistDto boardlistDto) {
-        Boardlist boardlist = boardListRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Boardlist not found"));
+        Boardlist boardlist = this.getBoardlistById(id);
         boardlist.setName(boardlistDto.getName());
         boardlist.setProject(this.projectService.findById(boardlistDto.getProjectId()));
         return convertToBoardlistDto(boardListRepository.save(boardlist));
     }
 
     // delete boardlist by id
-    public void deleteBoardlist(Long id){
+    public ResponseEntity<Boolean> deleteBoardlist(Long id){
+        Boardlist boardlist = this.getBoardlistById(id);
         this.boardListRepository.deleteById(id);
+        return new ResponseEntity<>(true, HttpStatus.valueOf(200));
     }
 }

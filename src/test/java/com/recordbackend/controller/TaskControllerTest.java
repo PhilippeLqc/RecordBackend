@@ -66,6 +66,34 @@ public class TaskControllerTest {
     }
 
     @Test
+    public void testCreateTask() throws Exception {
+        // Arrange
+        TaskDto taskDto = TaskDto.builder()
+                .taskId(1L)
+                .title("Task Title")
+                .description("Task Description")
+                .status(Status.ACTIVE)
+                .hierarchy(Hierarchy.IMPORTANT)
+                .listUserId(List.of(1L, 2L))
+                .boardlistId(202L)
+                .build();
+
+        when(taskService.createTask(any(TaskDto.class))).thenReturn(taskDto);
+
+        final String expectedResponseContent = objectMapper.writeValueAsString(taskDto);
+
+        // Act & Assert
+        mockMvc.perform(MockMvcRequestBuilders.post("/task/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token) // Add the Authorization header with the token
+                        .content(objectMapper.writeValueAsString(taskDto)))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().json(expectedResponseContent))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title", Matchers.is("Task Title")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description", Matchers.is("Task Description")));
+    }
+
+    @Test
     public void testUpdateTask() throws Exception {
         // Arrange
         Long id = 602L;

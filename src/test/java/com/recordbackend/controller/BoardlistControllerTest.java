@@ -172,6 +172,18 @@ public class BoardlistControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.projectId", Matchers.is(102)));
     }
 
+    @Test
+    public void testDeleteBoardlist() throws Exception {
+        // Arrange
+        Long id = 202L;
+
+        //Act & Assert
+        mockMvc.perform(MockMvcRequestBuilders.delete("/boardlist/delete/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token)) // Add the Authorization header with the token
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
 
     // Implement this method to extract token from response
     private String extractTokenFromResponse(String response) throws JsonProcessingException {

@@ -162,6 +162,7 @@ public class BoardlistControllerTest {
         Long id = 202L;
         BoardlistDto boardlistDto = new BoardlistDto("testBoardlist1", 102L);
         when(boardlistService.updateBoardlistById(id, boardlistDto)).thenReturn(boardlistDto);
+        System.out.println(objectMapper.writeValueAsString(boardlistDto));
         // Act & Assert
         mockMvc.perform(MockMvcRequestBuilders.put("/boardlist/update/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)

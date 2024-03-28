@@ -78,7 +78,7 @@ public class BoardlistService {
 
     // update boardlist by id
     public BoardlistDto updateBoardlistById(Long id, BoardlistDto boardlistDto) {
-        Boardlist boardlist = boardListRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Boardlist not found"));
+        Boardlist boardlist = this.getBoardlistById(id);
         boardlist.setName(boardlistDto.getName());
         boardlist.setProject(this.projectService.findById(boardlistDto.getProjectId()));
         return convertToBoardlistDto(boardListRepository.save(boardlist));

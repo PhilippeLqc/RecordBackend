@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -83,7 +85,12 @@ public class BoardlistService {
     }
 
     // delete boardlist by id
-    public void deleteBoardlist(Long id){
+    public ResponseEntity<Boolean> deleteBoardlist(Long id){
+        Boardlist boardlist = this.getBoardlistById(id);
+        if(boardlist == null){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         this.boardListRepository.deleteById(id);
+        return new ResponseEntity<>(true, HttpStatus.valueOf(200));
     }
 }

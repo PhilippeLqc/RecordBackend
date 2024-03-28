@@ -181,7 +181,7 @@ public class BoardlistControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/boardlist/delete/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + token)) // Add the Authorization header with the token
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().is(204));
     }
 
 

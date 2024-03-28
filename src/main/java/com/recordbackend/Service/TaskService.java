@@ -104,7 +104,7 @@ public class TaskService {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         this.taskRepository.deleteById(id);
-        return new ResponseEntity<>(true, HttpStatus.OK);
+        return new ResponseEntity<>(true, HttpStatus.valueOf(200));
     }
 
     // Assign a user to a task

@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,6 +93,36 @@ public class TaskControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title", Matchers.is("Task Title")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description", Matchers.is("Task Description")));
     }
+
+    @Test
+    public void testGetAllTask() throws Exception {
+        // Arrange
+        List<TaskDto> taskDtos = new ArrayList<>();
+        for(int i = 0; i < 20; i++){
+            TaskDto taskDto = TaskDto.builder()
+                    .taskId((long) i)
+                    .title("Task Title " + i)
+                    .description("Task Description " + i)
+                    .status(Status.ACTIVE)
+                    .hierarchy(Hierarchy.IMPORTANT)
+                    .listUserId(List.of(1L, 2L))
+                    .boardlistId(202L)
+                    .build();
+            taskDtos.add(taskDto);
+        }
+
+        when(taskService.getAllTask()).thenReturn(taskDtos);
+
+        // Act & Assert
+        mockMvc.perform(MockMvcRequestBuilders.get("/task/all")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token)) // Add the Authorization header with the token
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(20)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].title", Matchers.is("Task Title 0")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].description", Matchers.is("Task Description 0")));
+    }
+
 
     @Test
     public void testUpdateTask() throws Exception {

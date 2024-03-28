@@ -5,11 +5,12 @@ import com.recordbackend.Model.Task;
 import com.recordbackend.Model.User;
 import com.recordbackend.Repository.BoardListRepository;
 import com.recordbackend.Repository.TaskRepository;
-import com.recordbackend.Repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,8 +24,8 @@ public class TaskService {
     private final BoardListRepository boardListRepository;
 
     @Setter
+    @Autowired
     private UserService userService;
-    private final UserRepository userRepository;
 
     // convert TaskDto to Task
     public Task convertToTaskEntity(TaskDto taskDto){
@@ -39,7 +40,7 @@ public class TaskService {
                 .hierarchy(taskDto.getHierarchy())
                 .build();
 
-        task.getUsers().addAll(taskDto.getListUserId().stream().map(userId -> userRepository.findById(userId).get()).toList());
+        task.getUsers().addAll(taskDto.getListUserId().stream().map(userId -> userService.getUserById(userId)).toList());
         return task;
     }
 
@@ -97,7 +98,36 @@ public class TaskService {
     }
 
     // delete Task by id
-    public void deleteTask(Long id){
+    public ResponseEntity<Boolean> deleteTask(Long id){
+        Task task = this.getTaskById(id);
+        if(task == null){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         this.taskRepository.deleteById(id);
+        return new ResponseEntity<>(true, HttpStatus.valueOf(200));
+    }
+
+    // Assign a user to a task
+    public ResponseEntity<TaskDto> assignUserToTask(Long userId, Long taskId) {
+        User userRetrieved = this.userService.getUserById(userId);
+        Task task = this.getTaskById(taskId);
+        if(task.getUsers().stream().anyMatch(user -> user.getId().equals(userId))){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        task.getUsers().add(userRetrieved);
+        TaskDto taskDto = this.convertToTaskDto(this.taskRepository.save(task));
+        return new ResponseEntity<>(taskDto, HttpStatus.OK);
+    }
+
+    // Remove a user from a task
+    public ResponseEntity<TaskDto> removeUserFromTask(Long userId, Long taskId) {
+        User userRetrieved = this.userService.getUserById(userId);
+        Task task = this.getTaskById(taskId);
+        if(task.getUsers().stream().noneMatch(user -> user.getId().equals(userId))) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        task.getUsers().remove(userRetrieved);
+        TaskDto taskDto = this.convertToTaskDto(this.taskRepository.save(task));
+        return new ResponseEntity<>(taskDto, HttpStatus.OK);
     }
 }
